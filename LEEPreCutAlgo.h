@@ -33,7 +33,7 @@ namespace leeprecuts {
     std::vector<float> GetTotalPE(float coincThresh, std::vector<float> flashes);
     
     float PMTMaxFrac(const std::vector<float>& ophit_peaktime_v, const std::vector<float>& ophit_pe_v, const std::vector<int>& ophit_femch_v,
-		     std::vector<float> flashBins, float totPE,int timeBinning, float Winstart);
+		     std::vector<float> flashBins, int timeBinning, float Winstart);
 
     //float PMTMaxFrac( const larlite::event_ophit& ophitList, std::vector<float> flashBins,float totPE,int timeBinning,float Winstart);
 

@@ -158,17 +158,26 @@ namespace leeprecuts {
   */
 
   float LEEPreCutAlgo::PMTMaxFrac(const std::vector<float>& ophit_peaktime_v, const std::vector<float>& ophit_pe_v, const std::vector<int>& ophit_femch_v,
-				  std::vector<float> flashBins, float totPE,int timeBinning, float Winstart) {
+				  std::vector<float> flashBins,int timeBinning, float Winstart) {
 
     std::vector<float> PEFracbyPMT(32,0.);
-    float maxFrac;
+    std::vector<float> binsAboveThresh;
 
+    for ( unsigned int j = 1; j < flashBins.size(); j++) {
+
+      binsAboveThresh.push_back(flashBins.at(j));
+    }
+
+    float maxFrac;
+    float totalEventPE = (float)flashBins.at(0);
+    float tickSize = 0.015625;
+    
     for (unsigned int i=0; i<ophit_peaktime_v.size(); i++) {
 
-      int ophitBin = (ophit_peaktime_v[i] - Winstart)/timeBinning;
+      int ophitBin = (ophit_peaktime_v[i]/tickSize - Winstart)/timeBinning;
 
-      if (std::find(flashBins.begin(),flashBins.end(),ophitBin)!=flashBins.end()) {
-	PEFracbyPMT[ophit_femch_v[i]]+=ophit_pe_v[i]/totPE;
+      if (std::find(binsAboveThresh.begin(),binsAboveThresh.end(),ophitBin)!=binsAboveThresh.end()) {
+	PEFracbyPMT[ophit_femch_v[i]]+=ophit_pe_v[i]/totalEventPE;
       }
 
     }
