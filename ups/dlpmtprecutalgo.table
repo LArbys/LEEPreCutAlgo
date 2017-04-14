@@ -1,0 +1,52 @@
+File=Table 
+Product=dlpmtprecutalgo
+ 
+Group:
+
+Flavor     = ANY
+Qualifiers = "e10:prof"
+
+Flavor     = ANY
+Qualifiers = "e10:debug"
+
+Flavor     = ANY
+Qualifiers = "e10:opt"
+
+Common:
+  Action = setup
+    prodDir()
+    setupEnv()
+    envSet(${UPS_PROD_NAME_UC}_VERSION, v01_00_00)
+
+    # Set up required products, there are none
+    #exeActionRequired(GetProducts)
+
+    # set environment variables
+    envSet(DLPMTPRECUTALGO_BASEDIR,${UPS_PROD_DIR}/${UPS_PROD_FLAVOR})
+    envSet(DLPMTPRECUTALGO_INCDIR,${UPS_PROD_DIR}/${UPS_PROD_FLAVOR}/include)
+    envSet(DLPMTPRECUTALGO_LIBDIR,${UPS_PROD_DIR}/${UPS_PROD_FLAVOR}/lib)
+    envSet(DLPMTPRECUTALGO_SOURCEDIR,${UPS_PROD_DIR}/${UPS_PROD_FLAVOR}/../source)
+
+    if ( test `uname` = "Darwin" )
+      envSet(DLPMTPRECUTALGO_CXX,clang++)
+      pathPrepend(DYLD_LIBRARY_PATH, ${DLPMTPRECUTALGO_LIBDIR})
+    else()
+      envSet(DLPMTPRECUTALGO_CXX,g++)
+      pathPrepend(LD_LIBRARY_PATH, ${DLPMTPRECUTALGO_LIBDIR})
+    endif ( test `uname` = "Darwin" )
+
+    # we have neither a binary or python folder
+    # add the bin directory to the path
+    #pathPrepend(PATH, ${UPS_PROD_DIR}/${UPS_PROD_FLAVOR}/bin )
+    # add the python area to the pythonpath
+    #pathPrepend(PYTHONPATH, ${UPS_PROD_DIR}/${UPS_PROD_FLAVOR}/../source/python )
+
+
+End:
+# End Group definition
+#*************************************************
+#
+# ups declare command that works on gpvm:
+# ups declare dlpmtprecutalgo v01_00_00 -r dlpmtprecutalgo/v01_00_00 -f Linux64bit+3.10-2.17 -m dlpmtprecutalgo.table -q e10:prof -U ups/
+#
+#
